@@ -4,7 +4,7 @@
 EAPI="6"
 JAVA_PKG_IUSE="source"
 
-inherit eutils java-pkg-2 java-ant-2 toolchain-funcs flag-o-matic fdo-mime gnome2-utils
+inherit eutils java-pkg-2 java-ant-2 toolchain-funcs flag-o-matic xdg-utils
 
 MY_P="${P}-src"
 DESCRIPTION="TuxGuitar is a multitrack guitar tablature editor and player written in Java-SWT"
@@ -128,9 +128,9 @@ src_install() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
-	gnome2_icon_cache_update
+	xdg_icon_cache_update
 
 	if use fluidsynth; then
 		ewarn "Fluidsynth plugin blocks behavior of JSA plugin."
@@ -139,7 +139,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
+	xdg_desktop_database_update
 	xdg_mimeinfo_database_update
-	gnome2_icon_cache_update
+	xdg_icon_cache_update
 }
