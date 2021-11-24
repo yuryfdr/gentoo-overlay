@@ -5,8 +5,8 @@ EAPI=5
 inherit multilib
 
 DESCRIPTION="The ADAPTIVE Communication Environment - An object oriented network programming toolkit in C++."
-HOMEPAGE="http://www.dre.vanderbilt.edu/~schmidt/ACE.html"
-SRC_URI="http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2"
+HOMEPAGE="https://www.dre.vanderbilt.edu/~schmidt/ACE.html"
+SRC_URI="https://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2"
 
 LICENSE="BSD as-is"
 SLOT="0"
