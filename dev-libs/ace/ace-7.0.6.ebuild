@@ -5,23 +5,21 @@ EAPI=5
 inherit multilib
 
 DESCRIPTION="The ADAPTIVE Communication Environment - An object oriented network programming toolkit in C++."
-HOMEPAGE="http://www.dre.vanderbilt.edu/~schmidt/ACE.html"
-SRC_URI="http://download.dre.vanderbilt.edu/previous_versions/ACE+TAO-${PV}.tar.bz2"
+HOMEPAGE="https://www.dre.vanderbilt.edu/~schmidt/ACE.html"
+SRC_URI="https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-7_0_6/ACE+TAO-7.0.6.tar.bz2"
 
 LICENSE="BSD as-is"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~x86"
-IUSE="X +boost +bzip2 +fltk gtk +opengl openmp +qt5 static-libs +ssl +stl +tao +threads valgrind +xerces-c +zlib"
+KEYWORDS="amd64 ~x86"
+IUSE="X +boost +bzip2 +fltk +opengl +qt5 +ssl +stl +tao +threads  +xerces-c +zlib"
 # TODO test without tao
+# +lzo +wxwidgets
 
 DEPEND="virtual/pkgconfig
 	boost? ( dev-libs/boost )
 	fltk? ( x11-libs/fltk[opengl] )
-	gtk? ( x11-libs/gtk+ )
 	opengl? ( virtual/opengl )
-	openmp? ( sys-cluster/openmpi )
 	ssl? ( dev-libs/openssl )
-	valgrind? ( dev-util/valgrind )
 	X? ( x11-libs/libX11 
 	     x11-libs/libXt )
 	xerces-c? ( dev-libs/xerces-c )
@@ -31,13 +29,16 @@ DEPEND="virtual/pkgconfig
 	    )
 	"
 #	wxwidgets? ( x11-libs/wxGTK )
+#	dev-libs/lzo
 #	fox? ( x11-libs/fox:1.7 )
 RDEPEND="${DEPEND}"
+RESTRICT="mirror"
 
 S="${WORKDIR}/ACE_wrappers"
 
 src_configure() {
-	echo '#include "ace/config-linux.h"' > "${S}"/ace/config.h
+	echo '#define ACE_HAS_VERSIONED_NAMESPACE 1' > "${S}"/ace/config.h
+	echo '#include "ace/config-linux.h"' >> "${S}"/ace/config.h
 	echo 'INSTALL_PREFIX = /usr' > "${S}"/include/makeinclude/platform_macros.GNU
 	echo 'INSTALL_LIB = '$(get_libdir) >> "${S}"/include/makeinclude/platform_macros.GNU
 	echo 'TCPU=native' >> "${S}"/include/makeinclude/platform_macros.GNU
@@ -48,12 +49,19 @@ src_configure() {
 	local myparams
 	if use bzip2; then
 		myparams="${myparams},bzip2=1"
+		echo 'bzip2=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 	fi
+	#if use lzo; then
+	#	myparams="${myparams},lzo1=1"
+	#	echo 'lzo1=1' >> "${S}"/include/makeinclude/platform_macros.GNU
+	#fi
 	if use zlib; then
 		myparams="${myparams},zlib=1"
+		echo 'zlib=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 	fi
 	if use boost; then
 		myparams="${myparams},boost=1"
+		echo 'boost=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 	fi
 	if use qt5; then
 		myparams="${myparams},qt5=1,ace_qt5reactor=1"
@@ -72,14 +80,13 @@ src_configure() {
 		myparams="${myparams},gl=1"
 	    fi
 	fi
-
+	#if use wxwidgets; then
+	#	echo 'wxWindows=1' >> "${S}"/include/makeinclude/platform_macros.GNU
+	#	myparams="${myparams},wxWindows=1"
+	#else
+	#	myparams="${myparams},wxWindows=0"
+	#fi
 	
-#	fi
-#	if use wxwidgets; then
-#		echo 'wxWindows=1' >> "${S}"/include/makeinclude/platform_macros.GNU
-#		myparams="${myparams},wxWindows=1"
-#	fi
-
 	if use ssl; then
 		echo 'ssl=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 		myparams="${myparams},ssl=1"
@@ -91,9 +98,6 @@ src_configure() {
 		echo 'xerces=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 		echo 'xerces3=1' >> "${S}"/include/makeinclude/platform_macros.GNU
 		myparams="${myparams},xerces=1"
-#	    if use tao; then 
-#	    	myparams="${myparams},ace_svcconf_gen=1"
-#	    fi
 	else
 		myparams="${myparams},xerces=0"
 	fi
